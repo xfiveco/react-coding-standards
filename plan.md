@@ -3,4 +3,4 @@
 * ✅ Avoid skipping deps.
 * ✅ Named functions for useEffects.
 * ✅ Clear side effects (like events and promises).
-* Avoid assigning objects as the default parameters.
+* [in progress] Avoid assigning objects as the default parameters.

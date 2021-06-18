@@ -2,6 +2,103 @@
 
 This guide is focusing on the recent versions of react featuring [React Hooks](https://reactjs.org/docs/hooks-intro.html).
 
+## Be careful when using objects as defaults
+
+‼️ Remember, [primitive values](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) can be safely compared for equality even when assigned to different variables. E.g.,
+
+```js
+const a = '2'
+const b = '2'
+
+a === a; // returns true
+b === b; // returns true
+
+// Comparing different variables
+a === b; // returns true
+```
+
+However, objects (all things which __aren't__ primitives) can't rely on such comparison:
+
+```js
+const a = [];
+const b = [];
+
+a === a; // returns true
+b === b; // returns true
+
+// Comparing different variables
+a === b; // returns false
+``` 
+
+It's important to keep that in mind when dealing with various values in React and providing them as "deps" for various hooks.
+
+Here are the common patterns you might want to use in your components or custom hooks:
+
+Bad:
+
+```js
+const useMyHook = ({ values = [] }) => {
+  // ^ We provide an empty array to guard from `undefined`.
+
+  useEffect(function doSomethingWithValues() {
+      // Code fires when `value` changes.
+  }, [values])
+};
+```
+
+__Good:__
+
+```js
+const DEFAULT_VALUE = [];
+
+const useMyHook = ({ values = DEFAULT_VALUE }) => {
+  // ^ This time `DEFAULT_VALUE` is alawyas _the same_.
+
+  useEffect(function doSomethingWithValues() {
+      // Code fires when `value` changes.
+  }, [value])
+};
+```
+
+☝️ In the "bad" example the empty array would be _assigned on each re-render_ resulting in firing the `doSomethingWithValue` effect **too often**. The "good" example fixes that by assigning an empty array to a variable outside of the function.
+
+This potential problems applies to this similar pattern as well:
+
+Bad:
+
+```jsx
+  const MyComponent = () => {
+    const values = useValue(); // returns an array or null
+    const safeValues = values || [];
+
+    useEffect(function doSomethingWithValues() {
+        // Code fires when `value` changes.
+    }, [value])
+
+    return <div />
+  }
+```
+
+__Good:__
+
+```jsx
+  const MyComponent = () => {
+    const values = useValue(); // returns an array or null
+    const safeValues = useMemo(() => values || [], [values]);
+    // ^ Use memo guards from reassigning the empty array
+    // on each render.
+
+    useEffect(function doSomethingWithValues() {
+        // Code fires when `value` changes.
+    }, [value])
+
+    return <div />
+  }
+```
+
+☝️It's worth pointing out the previous solution with `DEFAULT_VALUE` could work here as well. Choose whatever is suitable for your use case.
+
+
 ## Clear side effects
 
 The "bad" and "good" examples below rely on events _but_ it applies to other things like promises, timers, or observers which can run _after_ the effect has changed (due to its properties) OR the component holding it has been unmounted. It's important to realise useEffect's return value (and the function itself) _fires each time one of the dependencies changes_. Not only when component is mounted and unmounted.
