@@ -213,7 +213,7 @@ useEffect(function exampleEffect() {
 
 ### Promises
 
-Promise based code is more complex and requires different strategies depending on the case. E.g., you may want to [abort signal](dfile:///Users/arturkot/Library/Application%20Support/Dash/DocSets/JavaScript/JavaScript.docset/Contents/Resources/Documents/developer.mozilla.org/en-US/docs/Web/API/AbortSignal.html#examples) for a fetch request _or_ it might be a better idea to _ignore_ a promise. See: [an effective pattern to deal with promises firing _after_ unmounting the component](https://www.robinwieruch.de/react-hooks-fetch-data#abort-data-fetching-in-effect-hook). The link targets one specific section of a larger article. It's totally worth to read the whole piece though!
+Promise based code is more complex and requires different strategies depending on the case. E.g., you may want to [abort signal](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal#examples) for a fetch request _or_ it might be a better idea to _ignore_ a promise. See: [an effective pattern to deal with promises firing _after_ unmounting the component](https://www.robinwieruch.de/react-hooks-fetch-data#abort-data-fetching-in-effect-hook). The link targets one specific section of a larger article. It's totally worth to read the whole piece though!
 
 ## Name functions in effects
 
