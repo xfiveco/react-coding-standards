@@ -98,7 +98,6 @@ __Good:__
 
 ☝️It's worth pointing out the previous solution with `DEFAULT_VALUE` could work here as well. Choose whatever is suitable for your use case.
 
-
 ## Clear side effects
 
 The "bad" and "good" examples below rely on events _but_ it applies to other things like promises, timers, or observers which can run _after_ the effect has changed (due to its properties) OR the component holding it has been unmounted. It's important to realise useEffect's return value (and the function itself) _fires each time one of the dependencies changes_. Not only when component is mounted and unmounted.
@@ -135,7 +134,7 @@ useEffect(function exampleEffect() {
 }, [someFunction]);
 ```
 
-## Name function in effects
+## Name functions in effects
 
 Named function increase the code readability. Aside from that, they output _more accurate error messages_. The named function is visible in the stack trace helping to quickly navigate to the source of the problem. It's especially valuable in case of complex components with many effects.
 
