@@ -2,6 +2,61 @@
 
 This guide is focusing on the recent versions of react featuring [React Hooks](https://reactjs.org/docs/hooks-intro.html).
 
+## Don't forget about adding keys for list items
+
+You know they're [quite important](https://reactjs.org/docs/reconciliation.html#recursing-on-children), aren't you? ;)
+
+Bad:
+
+```jsx
+const Component = ({ items }) => (
+  <ul>
+    {items.map((item) => (
+      <li>{item.name}</li>
+    ))}
+  </ul>
+);
+```
+
+__Good:__
+
+```jsx
+const Component = ({ items }) => (
+  <ul>
+    {items.map((item) => (
+      <li key={item.id}>{item.name}</li>
+    ))}
+  </ul>
+);
+```
+
+### What if the items within the iterated array don't have IDs?
+
+Maybe they hold an other value which can identify them? Lists tend to hold _unique_ items: different text, colours. E.g., when dealing with an array of strings, consider __filtering out duplicates__. This will allow to safely use those strings as keys.
+
+  Example:
+
+  ```js
+  const items = ['a', 'a', 'b', 'c'];
+  const uniqueItems = Array.from(new Set(items));
+  // ^ Once filtered, the unique items are ready to use as keys.
+  ```
+
+It's tempting to use `index` to quickly deal with `key` property. Usually, there are better options but if we know the list is constant and not going to be altered (sorting, filtering, etc.), then `index` might work just fine.
+
+Example:
+
+```jsx
+const Component = ({ items }) => (
+  <ul>
+    {new Array(3).fill(0).map((_, index) => (
+      <li key={index}>{index + 1}. Item</li>
+    ))}
+  </ul>
+);
+// ^ This component is supposed to always print 3 list items.
+```
+
 ## Be careful when using objects as defaults
 
 ‼️ Remember, [primitive values](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) can be safely compared for equality even when assigned to different variables. E.g.,

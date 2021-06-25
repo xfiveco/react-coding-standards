@@ -1,4 +1,4 @@
-* Don't forget about keys in lists!
+* ✅ Don't forget about keys in lists!
 * ✅ Avoiding setting state after unmounting.
 * ✅ Avoid skipping deps.
 * ✅ Named functions for useEffects.
