@@ -212,8 +212,8 @@ const Component = () => {
 
 ---
 
-* You're going to stumble upon _much more_ complicated cases when working on real world applications. However, skipping the dependencies hardly ever a good idea.
+* You're going to stumble upon _much more_ complicated cases when working on real world applications. However, skipping the dependencies is hardly ever a good idea.
 
-* You might be under impression omitting dependencies might increase the overall performance but more often it can lean to all kind of weird, hard to track errors.
+* You might be under impression omitting dependencies might increase the overall performance but more often it can lead to all kind of weird, hard to track errors.
 
 * If you're looking for a quality article shedding more light on hook's dependencies then look no further: https://overreacted.io/a-complete-guide-to-useeffect/ This article feels more like a small book but __it's well worth your time__. It focuses on one `useEffect` but, even despite that, serves as a thorough overview of the mechanics behind hooks.
