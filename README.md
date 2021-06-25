@@ -62,11 +62,11 @@ const useMyHook = ({ values = DEFAULT_VALUE }) => {
 
 ☝️ In the "bad" example the empty array would be _assigned on each re-render_ resulting in firing the `doSomethingWithValue` effect **too often**. The "good" example fixes that by assigning an empty array to a variable outside of the function.
 
-This potential problems applies to this similar pattern as well:
+It applies to this similar pattern as well:
 
 Bad:
 
-```jsx
+```js
   const MyComponent = () => {
     const values = useValue(); // returns an array or null
     const safeValues = values || [];
@@ -75,13 +75,13 @@ Bad:
         // Code fires when `value` changes.
     }, [value])
 
-    return <div />
+    return null;
   }
 ```
 
 __Good:__
 
-```jsx
+```js
   const MyComponent = () => {
     const values = useValue(); // returns an array or null
     const safeValues = useMemo(() => values || [], [values]);
@@ -92,7 +92,7 @@ __Good:__
         // Code fires when `value` changes.
     }, [value])
 
-    return <div />
+    return null;
   }
 ```
 
