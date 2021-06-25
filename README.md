@@ -100,18 +100,16 @@ __Good:__
 
 ## Clear side effects
 
-The "bad" and "good" examples below rely on events _but_ it applies to other things like promises, timers, or observers which can run _after_ the effect has changed (due to its properties) OR the component holding it has been unmounted. It's important to realise useEffect's return value (and the function itself) _fires each time one of the dependencies changes_. Not only when component is mounted and unmounted.
+Watch out for events, promises, timers, or observers which can run _after_ the effect has changed (due to its properties) OR the component holding it has been unmounted. It's important to realise useEffect's return value (and the function itself) _fires each time one of the dependencies changes_. Not only when component is mounted and unmounted.
 
-Bonus link: [an effective pattern to deal with promises firing _after_ unmounting the componnent](https://www.robinwieruch.de/react-hooks-fetch-data#abort-data-fetching-in-effect-hook). The link targets one specific section of a larger article. It's totally worth to read the whole piece though!
-
-Example:
+### Example with events:
 
 Bad:
 
 ```js
 useEffect(function exampleEffect() {
   const handleKeyUp = ({ altKey }) => {
-  	if (altKey) someFunction();
+    if (altKey) someFunction();
   }
 
   document.addEventListener('keyup', handleKeyUp);
@@ -133,6 +131,34 @@ useEffect(function exampleEffect() {
   };
 }, [someFunction]);
 ```
+
+### Example with timers:
+
+Bad:
+
+```js
+useEffect(function exampleEffect() {
+  setTimeout(() => setValueState(value), 2000);
+}, [value]);
+```
+
+__Good:__
+
+```js
+useEffect(function exampleEffect() {
+  const timerId = setTimeout(() => setValueState(value), 2000);
+
+  return () => {
+    clearTimerout(timerId);
+  };
+}, [value]);
+// ^ Aside from debouncing, clearing the timeout guards from
+// setting the state on an unmounted component.
+```
+
+### Promises
+
+Promise based code is more complex and requires different strategies depending on the case. E.g., you may want to [abort signal](dfile:///Users/arturkot/Library/Application%20Support/Dash/DocSets/JavaScript/JavaScript.docset/Contents/Resources/Documents/developer.mozilla.org/en-US/docs/Web/API/AbortSignal.html#examples) for a fetch request _or_ it might be a better idea to _ignore_ a promise. See: [an effective pattern to deal with promises firing _after_ unmounting the component](https://www.robinwieruch.de/react-hooks-fetch-data#abort-data-fetching-in-effect-hook). The link targets one specific section of a larger article. It's totally worth to read the whole piece though!
 
 ## Name functions in effects
 
