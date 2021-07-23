@@ -2,9 +2,13 @@
 
 This guide is focusing on the recent versions of react featuring [React Hooks](https://reactjs.org/docs/hooks-intro.html).
 
-## Don't forget about adding keys for list items
+## Don't forget about adding keys for list items!
 
-You know they're [quite important](https://reactjs.org/docs/reconciliation.html#recursing-on-children), aren't you? ;)
+TL;DR; They aren't just a decoration and do affect the way your React application works.
+
+* See this Twitter thread for a quick overview: [https://twitter.com/dan_abramov/status/1415279090446204929](https://twitter.com/dan_abramov/status/1415279090446204929)
+* Article from the React's docs: [https://reactjs.org/docs/reconciliation.html#recursing-on-children](https://reactjs.org/docs/reconciliation.html#recursing-on-children)
+
 
 Bad:
 
@@ -34,13 +38,13 @@ const Component = ({ items }) => (
 
 Maybe they hold an other value which can identify them? Lists tend to hold _unique_ items: different text, colours. E.g., when dealing with an array of strings, consider __filtering out duplicates__. This will allow to safely use those strings as keys.
 
-  Example:
+Example:
 
-  ```js
-  const items = ['a', 'a', 'b', 'c'];
-  const uniqueItems = Array.from(new Set(items));
-  // ^ Once filtered, the unique items are ready to use as keys.
-  ```
+```js
+const items = ['a', 'a', 'b', 'c'];
+const uniqueItems = Array.from(new Set(items));
+// ^ Once filtered, the unique items are ready to use as keys.
+```
 
 It's tempting to use `index` to quickly deal with `key` property. Usually, there are better options but if we know the list is constant and not going to be altered (sorting, filtering, etc.), then `index` might work just fine.
 
@@ -58,6 +62,8 @@ const Component = ({ items }) => (
 ```
 
 ## Be careful when using objects as defaults
+
+TL;DR; Doing so may cause unintended amount of re-renders and/or calling `useEffect` functions.
 
 ‼️ Remember, [primitive values](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) can be safely compared for equality even when assigned to different variables. E.g.,
 
@@ -155,6 +161,8 @@ __Good:__
 
 ## Clear side effects
 
+TL;DR; _Not clearing_ side effects may lead to memory leaks, errors, and slow down the appliaction you're working on. E.g., firing event callbacks 10 times instead of just once (ouch!).
+
 Watch out for events, promises, timers, or observers which can run _after_ the effect has changed (due to its properties) OR the component holding it has been unmounted. It's important to realise useEffect's return value (and the function itself) _fires each time one of the dependencies changes_. Not only when component is mounted and unmounted.
 
 ### Example with events:
@@ -217,6 +225,8 @@ Promise based code is more complex and requires different strategies depending o
 
 ## Name functions in effects
 
+TL;DR; It's not something super important but can help you maintaining large components/custom hooks.
+
 Named function increase the code readability. Aside from that, they output _more accurate error messages_. The named function is visible in the stack trace helping to quickly navigate to the source of the problem. It's especially valuable in case of complex components with many effects.
 
 Example:
@@ -237,7 +247,9 @@ useEffect(function logMessage() {
 }, []);
 ```
 
-## Don't forget about dependencies
+## Don't forget about hooks' dependencies
+
+TL;DR; Not adding them results in _unpredictable_ code and can lead to nasty errors.
 
 Many of the [Hooks coming with React](https://reactjs.org/docs/hooks-reference.html) require a _dependency array_: `useEffect`, `useLayoutEffect`, `useMemo`, `useCallback`. The purpose of this array is to keep refreshing __the function inserted in each of those hooks__ according to the changing dependencies so that it __always has access to the up to date values__.
 
